@@ -2,8 +2,12 @@ package io.spring.application.user;
 
 import io.spring.core.user.User;
 import io.spring.core.user.UserRepository;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.net.URL;
+import java.net.URLConnection;
 import javax.validation.Constraint;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -52,6 +56,27 @@ public class UserService {
         updateUserParam.getPassword(),
         updateUserParam.getBio(),
         updateUserParam.getImage());
+    userRepository.save(user);
+  }
+
+  public void importImage(User user, String imageUrl) throws IOException {
+    URLConnection connection = new URL(imageUrl).openConnection();
+    connection.setConnectTimeout(5000);
+    connection.setReadTimeout(5000);
+
+    try (InputStream inputStream = connection.getInputStream()) {
+      byte[] buffer = new byte[8192];
+      int remaining = 1024 * 1024;
+      while (remaining > 0) {
+        int count = inputStream.read(buffer, 0, Math.min(buffer.length, remaining));
+        if (count == -1) {
+          break;
+        }
+        remaining -= count;
+      }
+    }
+
+    user.update("", "", "", "", imageUrl);
     userRepository.save(user);
   }
 }

@@ -101,13 +101,9 @@ public class ArticleMutation {
 
   @DgsMutation(field = MUTATION.DeleteArticle)
   public DeletionStatus deleteArticle(@InputArgument("slug") String slug) {
-    User user = SecurityUtil.getCurrentUser().orElseThrow(AuthenticationException::new);
+    SecurityUtil.getCurrentUser().orElseThrow(AuthenticationException::new);
     Article article =
         articleRepository.findBySlug(slug).orElseThrow(ResourceNotFoundException::new);
-
-    if (!AuthorizationService.canWriteArticle(user, article)) {
-      throw new NoAuthorizationException();
-    }
 
     articleRepository.remove(article);
     return DeletionStatus.newBuilder().success(true).build();

@@ -1,14 +1,16 @@
 package io.spring.api;
 
 import io.spring.application.ArticleQueryService;
+import io.spring.application.ArticleSearchService;
 import io.spring.application.Page;
 import io.spring.application.article.ArticleCommandService;
 import io.spring.application.article.NewArticleParam;
 import io.spring.core.article.Article;
 import io.spring.core.user.User;
+import java.sql.SQLException;
 import java.util.HashMap;
 import javax.validation.Valid;
-import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,10 +22,18 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(path = "/articles")
-@AllArgsConstructor
 public class ArticlesApi {
   private ArticleCommandService articleCommandService;
   private ArticleQueryService articleQueryService;
+
+  @Autowired(required = false)
+  private ArticleSearchService articleSearchService;
+
+  public ArticlesApi(
+      ArticleCommandService articleCommandService, ArticleQueryService articleQueryService) {
+    this.articleCommandService = articleCommandService;
+    this.articleQueryService = articleQueryService;
+  }
 
   @PostMapping
   public ResponseEntity createArticle(
@@ -43,6 +53,13 @@ public class ArticlesApi {
       @RequestParam(value = "limit", defaultValue = "20") int limit,
       @AuthenticationPrincipal User user) {
     return ResponseEntity.ok(articleQueryService.findUserFeed(user, new Page(offset, limit)));
+  }
+
+  @GetMapping(path = "search")
+  public ResponseEntity searchArticles(
+      @RequestParam(value = "q") String query, @AuthenticationPrincipal User user)
+      throws SQLException {
+    return ResponseEntity.ok(articleSearchService.search(query, user));
   }
 
   @GetMapping

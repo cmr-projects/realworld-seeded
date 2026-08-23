@@ -110,6 +110,16 @@ public class ArticleQueryService {
     }
   }
 
+  public ArticleDataList findArticlesByIds(List<String> articleIds, User currentUser) {
+    if (articleIds.size() == 0) {
+      return new ArticleDataList(new ArrayList<>(), 0);
+    }
+
+    List<ArticleData> articles = articleReadService.findArticles(articleIds);
+    fillExtraInfo(articles, currentUser);
+    return new ArticleDataList(articles, articles.size());
+  }
+
   public ArticleDataList findUserFeed(User user, Page page) {
     List<String> followdUsers = userRelationshipQueryService.followedUsers(user.getId());
     if (followdUsers.size() == 0) {

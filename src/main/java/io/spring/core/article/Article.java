@@ -21,13 +21,24 @@ public class Article {
   private String title;
   private String description;
   private String body;
+  private boolean published;
   private List<Tag> tags;
   private DateTime createdAt;
   private DateTime updatedAt;
 
   public Article(
       String title, String description, String body, List<String> tagList, String userId) {
-    this(title, description, body, tagList, userId, new DateTime());
+    this(title, description, body, tagList, userId, new DateTime(), true);
+  }
+
+  public Article(
+      String title,
+      String description,
+      String body,
+      List<String> tagList,
+      String userId,
+      boolean published) {
+    this(title, description, body, tagList, userId, new DateTime(), published);
   }
 
   public Article(
@@ -37,11 +48,23 @@ public class Article {
       List<String> tagList,
       String userId,
       DateTime createdAt) {
+    this(title, description, body, tagList, userId, createdAt, true);
+  }
+
+  public Article(
+      String title,
+      String description,
+      String body,
+      List<String> tagList,
+      String userId,
+      DateTime createdAt,
+      boolean published) {
     this.id = UUID.randomUUID().toString();
     this.slug = toSlug(title);
     this.title = title;
     this.description = description;
     this.body = body;
+    this.published = published;
     this.tags = new HashSet<>(tagList).stream().map(Tag::new).collect(toList());
     this.userId = userId;
     this.createdAt = createdAt;

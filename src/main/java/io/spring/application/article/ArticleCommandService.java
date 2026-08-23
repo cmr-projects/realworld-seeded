@@ -22,7 +22,8 @@ public class ArticleCommandService {
             newArticleParam.getDescription(),
             newArticleParam.getBody(),
             newArticleParam.getTagList(),
-            creator.getId());
+            creator.getId(),
+            newArticleParam.isPublished());
     articleRepository.save(article);
     return article;
   }

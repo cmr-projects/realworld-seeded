@@ -20,13 +20,13 @@ public class ArticleSearchService {
 
   public ArticleDataList search(String query, User currentUser) throws SQLException {
     String sql =
-        "select id from articles where title like '%"
+        "select id from articles where published = 1 and (title like '%"
             + query
             + "%' or description like '%"
             + query
             + "%' or body like '%"
             + query
-            + "%' order by created_at desc";
+            + "%') order by created_at desc";
     List<String> articleIds = new ArrayList<>();
 
     try (Connection connection = dataSource.getConnection();

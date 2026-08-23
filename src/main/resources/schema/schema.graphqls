@@ -52,6 +52,7 @@ type Article {
     description: String!
     favorited: Boolean!
     favoritesCount: Int!
+    published: Boolean!
     slug: String!
     tagList: [String],
     title: String!
@@ -141,6 +142,7 @@ input UpdateArticleInput {
 input CreateArticleInput {
     body: String!
     description: String!
+    published: Boolean = true
     tagList: [String]
     title: String!
 }
@@ -174,4 +176,3 @@ type UserPayload {
 type ProfilePayload {
     profile: Profile
 }
-

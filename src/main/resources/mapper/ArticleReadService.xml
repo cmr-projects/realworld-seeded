@@ -14,6 +14,7 @@
         A.title articleTitle,
         A.description articleDescription,
         A.body articleBody,
+        A.published articlePublished,
         A.created_at articleCreatedAt,
         A.updated_at articleUpdatedAt,
         T.name tagName,
@@ -47,8 +48,9 @@
     <select id="queryArticles" resultMap="articleId">
         <include refid="selectArticleIds" />
         <where>
+            A.published = 1
             <if test="tag != null">
-                T.name = #{tag}
+                AND T.name = #{tag}
             </if>
             <if test="author != null">
                 AND AU.username = #{author}
@@ -71,8 +73,9 @@
         left join users AU on AU.id = A.user_id
         left join users AFU on AFU.id = AF.user_id
         <where>
+            A.published = 1
             <if test="tag != null">
-                T.name = #{tag}
+                AND T.name = #{tag}
             </if>
             <if test="author != null">
                 AND AU.username = #{author}

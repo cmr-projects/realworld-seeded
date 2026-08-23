@@ -42,6 +42,7 @@ public class ArticleMutation {
             .description(input.getDescription())
             .body(input.getBody())
             .tagList(input.getTagList() == null ? Collections.emptyList() : input.getTagList())
+            .published(input.getPublished() == null || input.getPublished())
             .build();
     Article article = articleCommandService.createArticle(newArticleParam, user);
     return DataFetcherResult.<ArticlePayload>newResult()

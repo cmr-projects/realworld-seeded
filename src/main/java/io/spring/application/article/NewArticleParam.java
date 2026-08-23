@@ -25,4 +25,6 @@ public class NewArticleParam {
   private String body;
 
   private List<String> tagList;
+
+  @Builder.Default private boolean published = true;
 }
